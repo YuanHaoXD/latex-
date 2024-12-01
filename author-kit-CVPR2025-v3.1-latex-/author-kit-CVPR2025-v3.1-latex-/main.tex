@@ -1,0 +1,75 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+
+\usepackage{cvpr}      % To produce the REVIEW version
+%\usepackage 用来加载 cvpr 宏包。
+% \usepackage[review]{cvpr} 表示将生成用于评审（review）的版本，会带有行号。
+% \usepackage{cvpr} 是最终提交时的版本，不带行号。
+% \usepackage[pagenumbers]{cvpr} 添加页码，一般用于预印版（如 arXiv）。
+\input{preamble}
+
+\definecolor{cvprblue}{rgb}{0.21,0.49,0.74}
+\usepackage[pagebackref,breaklinks,colorlinks,allcolors=cvprblue]{hyperref}
+%----------------------设置中文字体--------------------------
+\usepackage{fontspec}
+\usepackage{xunicode}
+\usepackage{xeCJK}
+
+% 设置英文字体
+\setmainfont{Times New Roman}
+
+% 设置中文字体
+\setCJKmainfont[AutoFakeBold]{SimSun}    % 宋体
+\setCJKsansfont{SimHei}   % 黑体
+\setCJKmonofont{FangSong} % 仿宋
+
+%--------------------------------------------------------------------------
+\usepackage{setspace}
+% 单倍行距
+\onehalfspacing
+\usepackage {indentfirst}
+
+%%%%%%%%% PAPER ID  - PLEASE UPDATE
+\def\paperID{1} % *** Enter the Paper ID here
+\def\confName{CVPR}
+\def\confYear{2025}
+%三个宏定义，用于在底下进行替换
+%%%%%%%%% TITLE - PLEASE UPDATE
+
+% \title{\LaTeX\ Author Guidelines for \confName~Proceedings}
+\title{学习记录}
+
+%输入标题
+%%%%%%%%% AUTHORS - PLEASE UPDATE
+\author{王远皓
+% Institution1\\
+% Institution1 address\\
+% {\tt\small firstauthor@i1.org}
+% \and
+% Second Author\\
+% Institution2\\
+% First line of institution2 address\\
+% {\tt\small secondauthor@i2.org}
+}
+
+\begin{document}
+\maketitle
+% \input{sec/0_abstract}    
+% \input{sec/1_intro}
+% \input{sec/2_formatting}
+% \input{sec/3_finalcopy}
+
+\input{sec/11_gaiyao}    
+\input{sec/12_neirong}
+\input{sec/13_jiewei}
+
+
+% {
+%     \small
+%     \bibliographystyle{ieeenat_fullname}
+%     \bibliography{main}
+% }
+
+% WARNING: do not forget to delete the supplementary pages from your submission 
+% \input{sec/X_suppl}
+
+\end{document}

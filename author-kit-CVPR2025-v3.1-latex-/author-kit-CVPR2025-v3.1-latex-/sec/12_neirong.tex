@@ -1,0 +1,223 @@
+\section{LaTeX个人使用手册(CVPR格式部分解析)}
+\subsection{main.tex部分功能解析}
+%分点描述:
+\begin{itemize}
+    \item  $\backslash$documentclas[10pt,twocolumn,letterpaper]\{article\}\\
+    documentclass 定义文档类型。参数[10pt,twocolumn,letterpaper] 表示字体大小为 10pt，双栏排版，纸张大小为 letter（美国标准大小）。
+    \item $\backslash$usepackage 用来加载 cvpr 宏包。$\backslash$usepackage[review]\{cvpr\} 表示将生成用于评审（review）的版本，会带有行号。\\
+    $\backslash$usepackage\{cvpr\} 是最终提交时的版本，不带行号。\\
+    $\backslash$usepackage[pagenumbers]\{cvpr\} 添加页码，一般用于预印版（如 arXiv）。
+    \item  $\backslash$usepackage{setspace}\\
+    单倍行距\\
+    $\backslash$singlespacing\\
+    1.5倍行距\\
+    $\backslash$onehalfspacing\\
+    双倍行距\\
+    $\backslash$doublespacing
+    \item 中文设置 \\
+    $\backslash$usepackage{fontspec}\\
+    $\backslash$usepackage{xunicode}\\
+    $\backslash$usepackage{xeCJK}
+    \\设置英文字体\\
+    $\backslash$setmainfont{Times New Roman}
+    \\ 设置中文字体\\
+    $\backslash$setCJKmainfont[AutoFakeBold]{SimSun} 常规字体:宋体 \\  
+    $\backslash$setCJKsansfont{SimHei} 加粗字体：黑体\\   
+    $\backslash$setCJKmonofont{FangSong}等宽字体：仿宋
+\end{itemize}
+\subsection{一些有助于排版的小功能（持续更新）}
+\begin{itemize}
+    \item $\backslash$noindet取消段落前的缩进
+    \item$\backslash$smallskip：插入一个小的空白，用于需要更小间距的情况。
+ \item$\backslash$bigskip：插入一个较大的空白，用于需要较大间距的情况。
+ \item$\backslash$medskip 是一个插入适中高度空白的命令，常用于分隔文本段落或元素，增强文档的可读性和排版美感。
+ \item$\backslash$$\backslash$换行
+ \item$\backslash$textbf{}加粗表示
+ \item$\backslash$and 表示并列
+ \item$\backslash$ref 表示引用
+ \item 正在使用的分点表示:\\$\backslash$begin\{itemize\}\\$\backslash$item 分点内容\\$\backslash$end\{itemize\}
+\end{itemize}
+\section{最短路径算法}
+\subsection{\textbf{搜索}}
+搜索问题涉及一个智能体(\textbf{agent})，该智能体会接收初始状态和目标状态，
+并返回从初始状态到目标状态的解决方案。例如，导航应用程序就是一个典型的搜索过程，其中智能体（程序的思考部分）接收当前的位置和目标目的地作为输入，并基于搜索算法返回一条推荐路径。
+然而，搜索问题的形式还有很多其他类型，比如拼图或迷宫等。
+
+搜索过程主要包括以下几个步骤：
+\begin{itemize}
+    \item \textbf{智能体(Agent)}:\\一个感知其环境并对环境做出反应的\textbf{实体}。例如，在导航应用程序中，
+    智能体可以看作是代表汽车的一个模型，负责决定采取哪些行动以到达目的地。\smallskip
+    \item \textbf{状态(State)}:\\智能体在环境中的一种\textbf{配置}。例如，
+    在15拼图游戏中，状态是指所有数字在棋盘上排列的某种方式。\smallskip
+    \item \textbf{行动(Action)}:\\在某个状态下可以做出的选择。更准确地说，行动可以被定义为一个\textbf{函数}。当接收状态作为输入时，返回可以在该状态下执行的\textbf{行动集合}。
+    例如，在15拼图游戏中，给定状态下的行动是指在当前配置中可以滑动的方块（
+    如果空白方块在中间，则可以滑动4个方块；如果在边缘，则是3个；如果在角落，则是2个）。\smallskip
+    \item \textbf{转换模型(Transition Model)}:\\描述执行任何适用行动后，所得到的新状态。更准确地说，
+    转换模型可以定义为一个函数。当接收状态和行动作为输入时，返回执行该行动后得到的\textbf{新状态}。例如，在15拼图游戏中，
+    给定某个配置（状态），移动方块（行动）会导致拼图的新配置（新状态）。\smallskip
+    \item \textbf{状态空间(State Space)}:\\从初始状态通过任何一系列行动可以到达的所有状态的\textbf{集合}。
+    例如，在15拼图中，状态空间包含所有可以从任意初始状态通过一系列合法行动达到的$\frac{16!}{2} $种棋盘配置。
+    状态空间可以被看作是一个有向图，\textbf{其中状态是节点，行动是节点之间的箭头。}\smallskip
+    \begin{figure}[htbp]
+        \centering
+         \includegraphics[width=0.8\linewidth]{2.eps}
+         \caption{状态空间}
+         \label{zhuangtaikongjian}
+      \end{figure}
+\end{itemize}
+\subsection{DFS与BFS}
+\begin{itemize}
+    \item \textbf{深度优先算法（DFS）}:\\
+    深度优先搜索算法在尝试另一个方向之前会穷尽每个方向。在这些情况下 \textbf{frontier} 作为\textbf{堆栈数据结构}进行管理。
+    需要记住的标语是\textbf{“后进先出”}。将节点添加到边界后，要删除并考虑的第一个节点是要添加的最后一个节点。\textbf{这导致搜索算法在第一个方向上尽可能深入，而将所有其他方向留给以后}。\\
+一个例子：以你正在寻找钥匙的情况为例。在深度优先的搜索方法中，如果选择从裤子开始搜索，你首先会检查每个口袋，清空每个口袋并仔细检查内容。只有当你完全用尽了裤子每个口袋的搜索后，你才会停止在裤子里搜索，并开始在其他地方搜索。
+\smallskip
+    \begin{itemize}
+    \item \textbf{优点:}
+    此算法充其量是最快的。如果它 “运气好” 并且总是 （偶然） 选择正确的解决方案路径，
+    那么深度优先搜索需要尽可能短的时间来找到解决方案。
+    \item \textbf{缺点：}
+    找到的解决方案可能不是最优的。
+    在最坏的情况下，此算法将在找到解决方案之前探索所有可能的路径，从而在获得解决方案之前花费尽可能长的时间。
+    \end{itemize}
+    \item \textbf{深度优先算法（BFS）}:\\
+    广度优先搜索算法将同时遵循多个方向，在每个可能的方向上迈出一步，然后在每个方向上迈出第二步。在这种情况下，frontier 作为\textbf{队列数据结构}进行管理。
+    需要记住的标语是\textbf{“先进先出”}。在这种情况下，所有新节点都会按顺序加起来，并且根据先添加的节点来考虑节点
+    \textbf{先到先得！这会导致搜索算法在每个可能的方向上采取一步，然后再在任何一个方向上采取第二步}。\\
+一个例子：假设正在寻找钥匙。在这种情况下，如果你从裤子开始，你会看看你的右口袋。在此之后，你将查看一个抽屉，而不是查看您的左口袋。然后在桌子上。以此类推，在你能想到的每个位置。只有在你用完所有位置后，你才会回到你的裤子里，在下一个口袋里搜索。
+\smallskip    
+    \begin{itemize}
+        \item \textbf{优点:}
+        此算法保证找到最佳解决方案。
+        \item \textbf{缺点:}
+        几乎可以保证此算法的运行时间比最短时间长。
+        在最坏的情况下，此算法需要尽可能长的运行时间。
+    \end{itemize}
+
+\end{itemize}
+\subsection{\textbf{贪心算法和A*算法}}
+广度优先和深度优先都是\textbf{不知情}的搜索算法。也就是说，
+这些算法没有利用他们没有通过自己的探索获得的有关问题的任何知识。但是，
+大多数情况下，实际上可以获得有关该问题的一些知识。例如，当人类迷宫求解器进入一个路口时，
+人类可以看到哪条路沿着解决方案的大致方向走，哪条路不走。(总是选择尽量靠近出口的方向选择)
+一种考虑额外知识以尝试提高其性能的算法称为\textbf{知情搜索算法}。
+\begin{itemize}
+    \item \textbf{贪心算法}: \\
+    \textbf{贪婪最佳优先搜索}会扩展最接近目标的节点，由\textbf{启发式函数$h(n)$} 确定。顾名思义，
+    该函数估计下一个节点离目标有多近，但可能会出错。贪婪最佳优先算法的效率取决于启发式函数的好坏。\\
+    例如，在迷宫中，算法可以使用启发式函数，该函数依赖于可能节点与迷宫末端之间的\textbf{曼哈顿距离}。
+    曼哈顿距离忽略墙壁，并计算从一个位置到目标位置需要向上、向下或向两侧走多少步。这是一个简单的估计值，
+    可以根据当前位置和目标位置的 $(x,y) $坐标得出。
+
+    \begin{figure}[htbp]
+        \centering
+         \includegraphics[width=0.8\linewidth]{1.eps}
+         \caption{曼哈顿距离}
+         \label{manhadun}
+      \end{figure}
+
+    \item \textbf{A*算法}: \\作为贪婪最佳优先算法的发展，$A*$ 搜索不仅考虑 $h(n)$（从当前位置到目标的估计成本），
+    还考虑 $g(n)$（直到当前位置为止的\textbf{累积成本}）。通过组合这两个值，该算法可以更准确地确定解决方案的成本并随时随地优化其选择。
+    该算法会跟踪 （到目前为止的\textbf{路径成本 + 达到目标的估计成本}），一旦它超过前一个选项的估计成本，算法将放弃当前路径并返回上一个选项，
+    从而防止自身走上一条 $h(n)$ 错误标记为最佳路径的漫长、低效的路径。\\
+    再一次，由于此算法也依赖于启发式方法，因此它与它采用的启发式方法一样好。在某些情况下，它可能不如贪婪的最好优先搜索甚至不知情的算法有效。
+    要使 A* 搜索最优，启发式函数 $h(n)$ 应为：
+    \begin{itemize}
+        \item \textbf{可接受}，或从不高估真实成本，以及
+        \item \textbf{一致}，这意味着除了从前一个节点过渡到新节点的目标的成本外，到新节点目标的估计路径成本大于或等于到前一个节点目标的估计路径成本。
+        用方程式来说，如果对于每个节点 n 和后继节点 n'，
+        步长成本为 c，$h(n) ≤ h(n') + c$,则 $h(n)$ 是一致的。
+    \end{itemize}
+    \end{itemize}
+
+
+\section{\textbf{LU分解}}
+LU分解是指矩阵$A$可以分解为 $LU$乘积的形式，其中$L$是单位下三角矩阵，$U$是单位上三角矩阵。\\
+实际上就是用$LU$矩阵保存下来高斯消元的行列线性变换，利于求解$Ax=b$,在$b$不确定时将计算从$n^3$化简成$n^2$
+\subsection{textbf{Guass变换}}
+若想将给定矩阵 $A$
+ 分解为下三角矩阵 $L$
+ 和上三角矩阵 $U$
+ ，一个思路就是通过一系列的初等变换将$A$ 
+ 化为上三角矩阵，且保证这些变换的乘积是一个下三角，比如通过初等变换 $L_{n-1} L_{n-2} ...L_{1}A=U$
+ ，则 $A=L_{1}^{-1}L_{2}^{-1}...L_{n-1}^{-1}U$
+，其中 U
+ 是一个上三角矩阵，  $(L_{1}L_{2}...L{n})^{-1}$
+ 是一个下三角矩阵。所以问题就转化为找满足条件的下三角矩阵，对于任意给定的向量 $x\in R^{n}$
+ ，找一个简单的下三角矩阵 $L_{k}$
+ 使 $x$
+ 经过这一矩阵的作用之后的第k+1至第n个分量均为0。能够完成这一条件的最简单的下三角矩阵如下：
+ \begin{equation}
+    L^k = I-l_{k}e_{k}^{T}
+ \end{equation}
+ \begin{equation}
+    l_{k}=\left(0 \ldots 0, l_{k+1, k} \ldots l_{n k}\right)^{T}
+ \end{equation}
+ \begin{equation}
+   L_{k}=\left(\begin{array}{cccc}
+        1 & \ddots & & \\
+        & 1 & & \\
+        & -l_{k+1, k} & 1 & \ddots \\
+        & \vdots & & \\
+        & -l_{n, k} & & 1
+        \end{array}\right)
+ \end{equation}
+ \subsection{\text{高斯消元法实现LU分解}}
+ 对于任意给定的向量 \( x = (x_1, \ldots, x_n)^T \in R^n \)，
+ 则  
+ \[
+ L_k x = (x_1, \ldots, x_k, x_{k+1} - x_k l_{k+1, k}, \ldots, x_n - x_k l_{n, k})
+ \]  
+ 
+ 若要使得第 \( k+1 \) 至第 \( n \) 个分量均为 0，
+ 则  
+ \[
+ l_{ik} = \frac{x_i}{x_k}, \quad i = k+1, \ldots, n
+ \]  
+ 
+ 此时  
+ \[
+ L_k x = (x_1, \ldots, x_k, 0, \ldots, 0)
+ \]  
+ 
+ 且 Gauss 变换 \( L_k \) 的性质非常好，Gauss 变换的逆特别容易求：
+ \[
+ (I - l_k e_k^T)(I + l_k e_k^T) = I - l_k e_k^T l_k e_k^T = I
+ \]  
+ 即  
+ \[
+ L_k^{-1} = I + l_k e_k^T
+ \]  
+ 
+ 此时  
+ \[
+ A = L_1^{-1} L_2^{-1} \cdots L_n^{-1} U = LU
+ \]  
+ 
+ 其中  
+ \[
+ L = L_1^{-1} L_2^{-1} \cdots L_n^{-1} = (I + l_1 e_1^T)(I + l_2 e_2^T) \cdots (I + l_{n-1} e_{n-1}^T)
+ \]
+ \[
+ = I + l_1 e_1^T + l_2 e_2^T + \cdots + l_{n-1} e_{n-1}^T
+ \]  
+ 
+ 则 \( L \) 具有如下形式：
+ \[
+ L = I + (l_1, l_2, \ldots, l_{n-1}, 0) = 
+ \begin{pmatrix}
+ 1      &        &        &        & \\
+ l_{21} & 1      &        &        & \\
+ l_{31} & l_{32} & 1      &        & \\
+ \vdots & \vdots & \vdots & \ddots & \\
+ l_{n1} & l_{n2} & l_{n3} & \cdots & 1
+ \end{pmatrix}
+ \]  
+ 
+ 所以 \( L \) 是一个单位下三角矩阵，矩阵 \( A \) 可以分解为单位下三角矩阵 \( L \) 和上三角矩阵 \( U \) 的形式。
+ 
+\subsection{\textbf{用法}}
+知道了$L$和$U$,式子$Ax=b$可以写作$LUx=b$,写作$Ly=b$,先解出$y$这个过程称为\textbf{正向迭代}
+然后再由$Ux=y$解出$x$，此过程称之为\textbf{反向迭代}。如此就不需要在每次在$b$发生变化时多次进行重复的高斯消元，简化计算机计算量
+
+
